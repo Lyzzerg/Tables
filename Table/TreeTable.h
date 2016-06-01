@@ -48,7 +48,7 @@ bool TTreeTable::Find(TKey _key) {
 		Eff++;
 		if (pCurr->rec.GetKey() == _key)
 			return true;
-		else if (pCurr->rec.GetKey() < _key)
+		else if (pCurr->rec.GetKey() > _key)
 			pRef = &(pCurr->pRight);
 		else
 			pRef = &(pCurr->pLeft);
@@ -74,19 +74,17 @@ void TTreeTable::Delete(TKey _key) {
 		else {
 			TTreeNode **tmp = &((*pRef)->pLeft);
 			TTreeNode **q = &((*pRef)->pLeft);
-			int iter = 0;
+			TTreeNode **z = tmp;
 			while ((*tmp)->pRight != NULL)
 			{
-				if (iter > 0)
-					*q = *tmp;
+				z = tmp;
 				*tmp = (*tmp)->pRight;
 				Eff++;
-				iter++;
 			}
 			(*pRef)->rec = (*tmp)->rec;
+			(*z)->pRight = (*tmp)->pLeft;
 			p = *tmp;
-			*tmp = (*tmp)->pLeft;
-			*q = *tmp;
+			(*pRef)->pLeft = *q;
 		}
 		delete p;
 		DataCount--;
